@@ -1,16 +1,24 @@
 {
-  "name": "secretleak",
+  "name": "secretguard",
   "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "",
+  "description": "SecretGuard - Secret Leak Intelligence & Prevention Platform",
+  "private": true,
   "type": "module",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs",
-    "test": "tests"
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "scan": "node src/scanner.js"
-  }
+    "scan": "node packages/scanner/src/index.js",
+    "test": "node tests/unit/runTests.js"
+  },
+  "keywords": [
+    "cybersecurity",
+    "secret-scanner",
+    "credential-leak",
+    "security-analysis",
+    "devsecops"
+  ],
+  "author": "SecretGuard Team",
+  "license": "Apache-2.0"
 }
