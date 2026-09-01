@@ -1,5 +1,5 @@
 import { RULES } from "../rules/detectorRules.js";
-import { DetectorType } from "../../../packages/shared/src/constants/enums.js";
+import { DetectorType } from "../../../shared/src/constants/enums.js";
 import { isPlaceholder } from "../filters/placeholderFilter.js";
 import { isFalsePositive } from "../filters/falsePositiveFilter.js";
 import { calculateConfidence } from "../analyzers/confidenceAnalyzer.js";

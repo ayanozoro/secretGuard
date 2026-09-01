@@ -1,4 +1,4 @@
-import { Severity, DetectorType } from "../../../packages/shared/src/constants/enums.js";
+import { Severity, DetectorType } from "../../../shared/src/constants/enums.js";
 
 /**
  * Evaluates the risk level based on credential type, confidence score, and file context.

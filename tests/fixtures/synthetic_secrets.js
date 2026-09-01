@@ -13,7 +13,7 @@ export const SYNTHETIC_FIXTURES = {
     placeholder: 'const GITHUB_TOKEN = "YOUR_TOKEN_HERE";'
   },
   database: {
-    postgres: 'const DB_URL = "postgres://dbadmin:p@ssw0rd123StrongSecret!@db.internal:5432/production";',
+    postgres: 'const DB_URL = "postgres://dbadmin:SuperSecurePassword123!@db.internal:5432/production";',
     placeholder: 'const DB_URL = "postgres://user:password@localhost:5432/test";'
   },
   jwt: {

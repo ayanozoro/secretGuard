@@ -1,4 +1,4 @@
-import { Severity, DetectorType } from "../../../packages/shared/src/constants/enums.js";
+import { Severity, DetectorType } from "../../../shared/src/constants/enums.js";
 
 /**
  * Central catalog of detector rules with severity, regex patterns, and validation requirements.
@@ -109,7 +109,7 @@ export const RULES = [
     name: "Database Connection String with Credentials",
     type: DetectorType.DATABASE_CREDENTIAL,
     severity: Severity.HIGH,
-    regex: /(?:postgres(?:ql)?|mysql|mongodb(?:\+srv)?|redis|mariadb|amqp):\/\/[^:\s]+:([^@\s]+)@[^\s\/]+/gi,
+    regex: /(?:postgres(?:ql)?|mysql|mongodb(?:\+srv)?|redis|mariadb|amqp):\/\/[^:\s\/]+:([^@\s\/]+)@[^\s"']+/gi,
     captureGroup: 1,
     minEntropy: 2.5,
     remediation: [

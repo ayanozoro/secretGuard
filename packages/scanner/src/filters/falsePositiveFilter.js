@@ -39,5 +39,17 @@ export function isFalsePositive(value, context = {}) {
     return true;
   }
 
+  // Environment variable accessors (e.g. process.env.API_KEY, os.getenv("..."), env.get("..."))
+  if (
+    clean.startsWith("process.env") ||
+    clean.startsWith("os.environ") ||
+    clean.startsWith("System.getenv") ||
+    clean.startsWith("ENV[") ||
+    clean.startsWith("$_ENV") ||
+    clean.startsWith("env.")
+  ) {
+    return true;
+  }
+
   return false;
 }

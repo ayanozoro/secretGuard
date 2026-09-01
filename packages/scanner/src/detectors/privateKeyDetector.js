@@ -1,5 +1,5 @@
 import { RULES } from "../rules/detectorRules.js";
-import { DetectorType, Severity } from "../../../packages/shared/src/constants/enums.js";
+import { DetectorType, Severity } from "../../../shared/src/constants/enums.js";
 import { calculateConfidence } from "../analyzers/confidenceAnalyzer.js";
 import { Finding } from "../models/finding.js";
 

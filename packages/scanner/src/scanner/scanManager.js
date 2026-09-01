@@ -1,6 +1,6 @@
 import { scanDirectory } from "./fileScanner.js";
 import { DetectorRegistry } from "../detectors/index.js";
-import { Severity } from "../../../packages/shared/src/constants/enums.js";
+import { Severity } from "../../../shared/src/constants/enums.js";
 
 /**
  * Main Scan Manager orchestrating the SecretGuard scan lifecycle.

@@ -1,6 +1,6 @@
-import { Severity, FindingStatus } from "../../../packages/shared/src/constants/enums.js";
-import { maskSecret } from "../../../packages/security/src/masker.js";
-import { generateFingerprint, generateFindingId } from "../../../packages/security/src/fingerprint.js";
+import { Severity, FindingStatus } from "../../../shared/src/constants/enums.js";
+import { maskSecret } from "../../../security/src/masker.js";
+import { generateFingerprint, generateFindingId } from "../../../security/src/fingerprint.js";
 
 /**
  * Standardized Secret Finding Model
