@@ -97,9 +97,15 @@ const genericPlaceholder = genericDetector.scan({ path: ".env", content: SYNTHET
 assert(genericPlaceholder.length === 0, "Rejected generic placeholder key");
 
 console.log("\n============================================================");
-console.log(`Results: \x1b[32m${passed} Passed\x1b[0m, \x1b[31m${failed} Failed\x1b[0m`);
+console.log(`Phase 1 Results: \x1b[32m${passed} Passed\x1b[0m, \x1b[31m${failed} Failed\x1b[0m`);
 console.log("============================================================\n");
 
-if (failed > 0) {
+// Run Phase 2 Git & CLI Tests
+import("./gitScanner.test.js").then(() => {
+  if (failed > 0) {
+    process.exit(1);
+  }
+}).catch(err => {
+  console.error("Phase 2 test failure:", err);
   process.exit(1);
-}
+});

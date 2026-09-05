@@ -9,11 +9,16 @@ import { calculateConfidence } from "./analyzers/confidenceAnalyzer.js";
 import { calculateRisk } from "./analyzers/riskAnalyzer.js";
 import { isPlaceholder } from "./filters/placeholderFilter.js";
 import { isFalsePositive } from "./filters/falsePositiveFilter.js";
+import { scanGitRepository, scanGitHistory, runGitCommand, isGitRepo } from "./git/index.js";
 import { logger } from "../../shared/src/utils/logger.js";
 
 export {
   ScanManager,
   scanDirectory,
+  scanGitRepository,
+  scanGitHistory,
+  runGitCommand,
+  isGitRepo,
   DetectorRegistry,
   DEFAULT_DETECTORS,
   Finding,
