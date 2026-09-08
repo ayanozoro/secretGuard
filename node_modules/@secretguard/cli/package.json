@@ -1,0 +1,15 @@
+{
+  "name": "@secretguard/cli",
+  "version": "1.0.0",
+  "description": "SecretGuard CLI - Real-time Secret Leak Intelligence & Prevention CLI",
+  "type": "module",
+  "bin": {
+    "secretguard": "./bin/secretguard.js"
+  },
+  "main": "src/cli.js",
+  "dependencies": {
+    "@secretguard/scanner": "*",
+    "@secretguard/security": "*",
+    "@secretguard/shared": "*"
+  }
+}

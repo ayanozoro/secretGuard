@@ -1,0 +1,16 @@
+{
+  "name": "@secretguard/database",
+  "version": "1.0.0",
+  "description": "SecretGuard MongoDB & Mongoose Database Layer",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": "./src/index.js",
+  "scripts": {
+    "seed": "node src/seeds/seed.js"
+  },
+  "dependencies": {
+    "@secretguard/shared": "*",
+    "@secretguard/security": "*",
+    "mongoose": "^8.0.0"
+  }
+}

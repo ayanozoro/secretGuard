@@ -102,10 +102,13 @@ console.log("============================================================\n");
 
 // Run Phase 2 Git & CLI Tests
 import("./gitScanner.test.js").then(() => {
+  // Run Phase 3 Database Tests
+  return import("./database.test.js");
+}).then(() => {
   if (failed > 0) {
     process.exit(1);
   }
 }).catch(err => {
-  console.error("Phase 2 test failure:", err);
+  console.error("Test failure:", err);
   process.exit(1);
 });

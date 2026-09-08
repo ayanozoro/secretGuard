@@ -20,5 +20,9 @@
     "devsecops"
   ],
   "author": "SecretGuard Team",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "mongoose": "^9.9.5"
+  }
 }
