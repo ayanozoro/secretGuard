@@ -2,9 +2,6 @@ import { Severity, FindingStatus } from "../../../shared/src/constants/enums.js"
 import { maskSecret } from "../../../security/src/masker.js";
 import { generateFingerprint, generateFindingId } from "../../../security/src/fingerprint.js";
 
-/**
- * Standardized Secret Finding Model
- */
 export class Finding {
   constructor({
     type,
