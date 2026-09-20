@@ -10,7 +10,10 @@
   ],
   "scripts": {
     "scan": "node packages/scanner/src/index.js",
-    "test": "node tests/unit/runTests.js"
+    "test": "node tests/unit/runTests.js",
+    "seed": "node packages/database/src/seeds/seed.js",
+    "api:start": "node apps/api/src/server.js",
+    "api:dev": "node --watch apps/api/src/server.js"
   },
   "keywords": [
     "cybersecurity",
@@ -23,6 +26,10 @@
   "license": "Apache-2.0",
   "dependencies": {
     "bcryptjs": "^3.0.3",
-    "mongoose": "^9.9.5"
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.0"
   }
 }

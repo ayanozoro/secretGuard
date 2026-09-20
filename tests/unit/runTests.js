@@ -105,6 +105,9 @@ import("./gitScanner.test.js").then(() => {
   // Run Phase 3 Database Tests
   return import("./database.test.js");
 }).then(() => {
+  // Run Phase 4 API Layer Tests
+  return import("./api.test.js");
+}).then(() => {
   if (failed > 0) {
     process.exit(1);
   }

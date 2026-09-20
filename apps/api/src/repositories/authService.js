@@ -1,9 +1,6 @@
-import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
-import crypto from "crypto"
-import * as userRepository from "../repositories/userRepository.js"
-
-const jwt_secret = process.env.JWT_SECRET;
-const expire_in = "7d";
-
-
+/**
+ * Deprecated: authService has been relocated to ../services/authService.js.
+ * Forwarding exports for backwards compatibility.
+ */
+export * from "../services/authService.js";
+export { default } from "../services/authService.js";
