@@ -13,7 +13,9 @@
     "test": "node tests/unit/runTests.js",
     "seed": "node packages/database/src/seeds/seed.js",
     "api:start": "node apps/api/src/server.js",
-    "api:dev": "node --watch apps/api/src/server.js"
+    "api:dev": "node --watch apps/api/src/server.js",
+    "web:dev": "npm --prefix apps/web run dev",
+    "web:build": "npm --prefix apps/web run build"
   },
   "keywords": [
     "cybersecurity",
