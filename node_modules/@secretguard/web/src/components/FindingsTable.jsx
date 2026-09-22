@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 /**
  * Interactive Findings Explorer Table
- * Displays detected secret leaks with severity filters, search, and triage actions.
+ * Matches mockup: Checkboxes, Severity pills with glowing outlines, File Path, Masked Secrets, and Triage actions
  */
 export default function FindingsTable({
   findings = [],
@@ -13,79 +13,80 @@ export default function FindingsTable({
   onSelectStatus = () => {},
   searchQuery = "",
   onSearchChange = () => {},
-  onInspectFinding = () => {},
+  selectedFinding = null,
+  onSelectFinding = () => {},
   onQuickTriage = () => {}
 }) {
   const severities = ["ALL", "CRITICAL", "HIGH", "MEDIUM", "LOW"];
-  const statuses = [
-    { label: "All Statuses", value: "ALL" },
-    { label: "Open Leaks", value: "OPEN" },
-    { label: "Resolved", value: "RESOLVED" },
-    { label: "False Positives", value: "FALSE_POSITIVE" }
-  ];
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [openDropdownId, setOpenDropdownId] = useState(null);
 
-  const getSeverityBadgeClass = (sev) => {
-    switch (sev?.toUpperCase()) {
-      case "CRITICAL":
-        return "badge-severity critical";
-      case "HIGH":
-        return "badge-severity high";
-      case "MEDIUM":
-        return "badge-severity medium";
-      case "LOW":
-        return "badge-severity low";
-      default:
-        return "badge-severity info";
+  const toggleSelectAll = () => {
+    if (selectedIds.size === findings.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(findings.map((f) => f.id)));
     }
   };
 
-  const getStatusBadgeClass = (status) => {
-    switch (status?.toUpperCase()) {
-      case "OPEN":
-        return "badge-status open";
-      case "RESOLVED":
-        return "badge-status resolved";
-      case "FALSE_POSITIVE":
-        return "badge-status false_positive";
+  const toggleSelectOne = (id, e) => {
+    e.stopPropagation();
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const getSeverityStyle = (sev) => {
+    switch (sev?.toUpperCase()) {
+      case "CRITICAL":
+        return "text-red-400 border-red-500/50 bg-red-500/10 shadow-[0_0_10px_rgba(239,68,68,0.25)]";
+      case "HIGH":
+        return "text-amber-400 border-amber-500/50 bg-amber-500/10 shadow-[0_0_8px_rgba(245,158,11,0.25)]";
+      case "MEDIUM":
+        return "text-cyan-400 border-cyan-500/50 bg-cyan-500/10 shadow-[0_0_8px_rgba(6,182,212,0.2)]";
+      case "LOW":
+        return "text-emerald-400 border-emerald-500/50 bg-emerald-500/10 shadow-[0_0_8px_rgba(16,185,129,0.2)]";
       default:
-        return "badge-status";
+        return "text-slate-400 border-white/20 bg-white/5";
     }
   };
 
   return (
-    <section className="glass-panel p-5 sm:p-6 rounded-2xl border border-white/10 bg-[#111827]/75 backdrop-blur-xl shadow-xl">
+    <section className="glass-panel p-5 rounded-2xl border border-white/10 bg-[#0F1626]/85 backdrop-blur-xl shadow-2xl flex flex-col h-full">
       
-      {/* Table Header & Filter Bar */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6">
-        <div>
-          <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-            <span>Secret Leak Findings</span>
-            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-white/10 text-slate-300">
-              {findings.length}
-            </span>
+      {/* Header: Title & Search Bar (Exact Mockup Layout) */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-3">
+          <h2 className="text-base font-bold text-white tracking-tight">
+            Interactive Findings
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Zero-Plaintext Policy: All secret tokens are irreversibly masked.
-          </p>
+          <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            {findings.length}
+          </span>
         </div>
 
-        {/* Search Bar */}
-        <div className="w-full lg:w-72 relative">
-          <svg className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
+        {/* Mockup Search Bar */}
+        <div className="relative w-full sm:w-64">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
           <input
             type="text"
-            placeholder="Search by rule, path, or type..."
+            placeholder="Search..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="input-cyber w-full pl-9 pr-8 py-2 text-xs rounded-xl"
+            className="w-full bg-[#080C14] border border-white/10 rounded-xl pl-9 pr-8 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all"
           />
           {searchQuery && (
             <button
               onClick={() => onSearchChange("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs cursor-pointer"
+              className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-400 hover:text-white text-xs cursor-pointer"
             >
               ✕
             </button>
@@ -93,165 +94,164 @@ export default function FindingsTable({
         </div>
       </div>
 
-      {/* Filter Chips: Severity & Status */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-white/5">
-        {/* Severity Chips */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-xs text-slate-400 font-medium mr-1">Severity:</span>
-          {severities.map((sev) => (
-            <button
-              key={sev}
-              onClick={() => onSelectSeverity(sev)}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold tracking-wider font-mono transition-all cursor-pointer ${
-                selectedSeverity === sev
-                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm"
-                  : "bg-black/30 text-slate-400 hover:text-slate-200 border border-white/5"
-              }`}
-            >
-              {sev}
-            </button>
-          ))}
-        </div>
-
-        {/* Status Dropdown/Tabs */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-slate-400 font-medium mr-1">Status:</span>
-          <select
-            value={selectedStatus}
-            onChange={(e) => onSelectStatus(e.target.value)}
-            className="bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1 text-xs text-slate-300 focus:outline-none focus:border-cyan-500 cursor-pointer"
+      {/* Severity Filter Chips */}
+      <div className="flex items-center gap-1.5 mb-4 pb-3 border-b border-white/5 overflow-x-auto">
+        {severities.map((sev) => (
+          <button
+            key={sev}
+            onClick={() => onSelectSeverity(sev)}
+            className={`px-3 py-1 rounded-lg text-xs font-semibold font-mono tracking-wider transition-all cursor-pointer select-none ${
+              selectedSeverity === sev
+                ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-[0_0_10px_rgba(6,182,212,0.3)]"
+                : "bg-black/20 text-slate-400 hover:text-slate-200 border border-white/5 hover:bg-white/5"
+            }`}
           >
-            {statuses.map((st) => (
-              <option key={st.value} value={st.value}>
-                {st.label}
-              </option>
-            ))}
-          </select>
-        </div>
+            {sev}
+          </button>
+        ))}
       </div>
 
       {/* Findings Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-white/10 text-slate-400 text-xs font-mono uppercase tracking-wider">
-              <th className="pb-3 px-3">Severity</th>
-              <th className="pb-3 px-3">Rule Name & Type</th>
-              <th className="pb-3 px-3">File Location</th>
-              <th className="pb-3 px-3">Masked Secret</th>
-              <th className="pb-3 px-3">Confidence</th>
-              <th className="pb-3 px-3">Status</th>
-              <th className="pb-3 px-3 text-right">Actions</th>
+            <tr className="border-b border-white/10 text-slate-400 text-[11px] font-mono uppercase tracking-wider">
+              <th className="pb-2.5 px-3 w-8">
+                <input
+                  type="checkbox"
+                  checked={findings.length > 0 && selectedIds.size === findings.length}
+                  onChange={toggleSelectAll}
+                  className="rounded border-white/20 text-cyan-500 focus:ring-0 focus:ring-offset-0 bg-slate-900 cursor-pointer"
+                />
+              </th>
+              <th className="pb-2.5 px-3">
+                <div className="flex items-center gap-1 cursor-pointer hover:text-slate-200">
+                  <span>Severity</span>
+                  <span className="text-[10px]">↕</span>
+                </div>
+              </th>
+              <th className="pb-2.5 px-3">File Path</th>
+              <th className="pb-2.5 px-3">Masked Secrets</th>
+              <th className="pb-2.5 px-3 text-right">Triage</th>
             </tr>
           </thead>
+
           <tbody className="divide-y divide-white/5 text-xs">
             {isLoading ? (
               <tr>
-                <td colSpan="7" className="text-center py-12 text-slate-400 font-mono">
+                <td colSpan="5" className="text-center py-12 text-slate-400 font-mono">
                   Loading security findings...
                 </td>
               </tr>
             ) : findings.length === 0 ? (
               <tr>
-                <td colSpan="7" className="text-center py-12 text-slate-400">
+                <td colSpan="5" className="text-center py-12 text-slate-400">
                   <div className="flex flex-col items-center gap-2">
-                    <svg className="w-8 h-8 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                      <path d="m9 12 2 2 4-4" />
-                    </svg>
-                    <span className="font-semibold text-slate-300">No secret leaks detected</span>
-                    <span className="text-xs text-slate-500">All scanned files match security policy</span>
+                    <span className="font-semibold text-slate-300">No secret leaks found</span>
+                    <span className="text-xs text-slate-500">Repository clean for selected filters</span>
                   </div>
                 </td>
               </tr>
             ) : (
-              findings.map((finding) => (
-                <tr 
-                  key={finding.id}
-                  className="hover:bg-white/[0.02] transition-colors group cursor-pointer"
-                  onClick={() => onInspectFinding(finding)}
-                >
-                  {/* Severity */}
-                  <td className="py-3.5 px-3">
-                    <span className={getSeverityBadgeClass(finding.severity)}>
-                      {finding.severity}
-                    </span>
-                  </td>
+              findings.map((finding) => {
+                const isSelected = selectedFinding?.id === finding.id;
+                const isChecked = selectedIds.has(finding.id);
 
-                  {/* Rule Name */}
-                  <td className="py-3.5 px-3">
-                    <div className="font-semibold text-slate-100 group-hover:text-cyan-300 transition-colors">
-                      {finding.ruleName}
-                    </div>
-                    <div className="text-[11px] text-slate-500 font-mono">
-                      {finding.type}
-                    </div>
-                  </td>
+                return (
+                  <tr
+                    key={finding.id}
+                    onClick={() => onSelectFinding(finding)}
+                    className={`transition-all duration-150 cursor-pointer group select-none ${
+                      isSelected
+                        ? "bg-cyan-500/10 border-l-2 border-cyan-400 shadow-[inset_0_0_12px_rgba(6,182,212,0.1)]"
+                        : "hover:bg-white/[0.03]"
+                    }`}
+                  >
+                    {/* Checkbox */}
+                    <td className="py-3 px-3" onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={(e) => toggleSelectOne(finding.id, e)}
+                        className="rounded border-white/20 text-cyan-500 focus:ring-0 focus:ring-offset-0 bg-slate-900 cursor-pointer"
+                      />
+                    </td>
 
-                  {/* File Location */}
-                  <td className="py-3.5 px-3 font-mono text-slate-300">
-                    <span className="text-cyan-400">{finding.filePath}</span>
-                    <span className="text-slate-500">:{finding.line}</span>
-                  </td>
+                    {/* Severity Pill */}
+                    <td className="py-3 px-3">
+                      <span className={`px-2.5 py-0.5 rounded-full border text-[10px] font-bold font-mono tracking-wider uppercase inline-block ${getSeverityStyle(finding.severity)}`}>
+                        {finding.severity}
+                      </span>
+                    </td>
 
-                  {/* Masked Secret */}
-                  <td className="py-3.5 px-3">
-                    <code className="font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-300 border border-red-500/20 text-[11px] tracking-wider">
-                      {finding.maskedSecret}
-                    </code>
-                  </td>
-
-                  {/* Confidence */}
-                  <td className="py-3.5 px-3 font-mono text-slate-300">
-                    <div className="flex items-center gap-1.5">
-                      <span>{Math.round((finding.confidence || 0.85) * 100)}%</span>
-                      <div className="w-12 h-1.5 rounded-full bg-slate-800 overflow-hidden">
-                        <div 
-                          className="h-full bg-cyan-400 rounded-full"
-                          style={{ width: `${Math.round((finding.confidence || 0.85) * 100)}%` }}
-                        />
+                    {/* File Path */}
+                    <td className="py-3 px-3 font-mono text-slate-200">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-slate-100 group-hover:text-cyan-300 transition-colors font-medium">
+                          {finding.filePath}
+                        </span>
+                        <span className="text-slate-500 text-[11px]">:{finding.line}</span>
                       </div>
-                    </div>
-                  </td>
+                    </td>
 
-                  {/* Status */}
-                  <td className="py-3.5 px-3">
-                    <span className={getStatusBadgeClass(finding.status)}>
-                      {finding.status}
-                    </span>
-                  </td>
+                    {/* Masked Secret */}
+                    <td className="py-3 px-3">
+                      <code className="font-mono px-2 py-0.5 rounded bg-black/40 text-red-300 border border-red-500/20 text-[11px] tracking-wider inline-block">
+                        {finding.maskedSecret}
+                      </code>
+                    </td>
 
-                  {/* Action */}
-                  <td className="py-3.5 px-3 text-right" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => onInspectFinding(finding)}
-                        className="btn btn-secondary text-xs px-2.5 py-1"
-                      >
-                        Inspect
-                      </button>
-
-                      {finding.status === "OPEN" ? (
+                    {/* Triage Action Button */}
+                    <td className="py-3 px-3 text-right" onClick={(e) => e.stopPropagation()}>
+                      <div className="relative inline-block text-left">
                         <button
-                          onClick={() => onQuickTriage(finding.id, "RESOLVED")}
-                          className="btn btn-success text-xs px-2.5 py-1"
-                          title="Mark finding as resolved"
+                          onClick={() => setOpenDropdownId(openDropdownId === finding.id ? null : finding.id)}
+                          className="px-3 py-1 rounded-lg text-xs font-semibold bg-[#0A0E1A] border border-white/10 text-slate-300 hover:text-white hover:border-cyan-500/40 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
                         >
-                          Resolve
+                          <span>{finding.status === "RESOLVED" ? "Resolved" : "Triage"}</span>
+                          <span className="text-[9px] text-slate-400">▾</span>
                         </button>
-                      ) : (
-                        <button
-                          onClick={() => onQuickTriage(finding.id, "OPEN")}
-                          className="btn btn-secondary text-xs px-2.5 py-1"
-                          title="Reopen finding"
-                        >
-                          Reopen
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))
+
+                        {/* Triage Dropdown Menu */}
+                        {openDropdownId === finding.id && (
+                          <div 
+                            className="absolute right-0 mt-1 w-36 rounded-xl bg-[#090D16] border border-white/15 shadow-2xl py-1 z-30 animate-in fade-in duration-100"
+                            onMouseLeave={() => setOpenDropdownId(null)}
+                          >
+                            <button
+                              onClick={() => {
+                                onQuickTriage(finding.id, "RESOLVED", "Quick triage resolve");
+                                setOpenDropdownId(null);
+                              }}
+                              className="w-full text-left px-3 py-1.5 text-xs text-emerald-400 hover:bg-emerald-500/10 cursor-pointer font-semibold flex items-center gap-2"
+                            >
+                              <span>✓</span> Resolve
+                            </button>
+                            <button
+                              onClick={() => {
+                                onQuickTriage(finding.id, "FALSE_POSITIVE", "Marked false positive");
+                                setOpenDropdownId(null);
+                              }}
+                              className="w-full text-left px-3 py-1.5 text-xs text-slate-300 hover:bg-white/5 cursor-pointer flex items-center gap-2"
+                            >
+                              <span>✕</span> False Positive
+                            </button>
+                            <button
+                              onClick={() => {
+                                onSelectFinding(finding);
+                                setOpenDropdownId(null);
+                              }}
+                              className="w-full text-left px-3 py-1.5 text-xs text-cyan-400 hover:bg-cyan-500/10 cursor-pointer flex items-center gap-2"
+                            >
+                              <span>🔍</span> View Details
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

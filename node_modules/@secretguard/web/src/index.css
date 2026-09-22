@@ -91,6 +91,12 @@
   padding: 0;
 }
 
+svg {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 html, body {
   background-color: var(--bg-obsidian);
   color: var(--text-primary);
