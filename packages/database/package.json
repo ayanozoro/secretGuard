@@ -11,6 +11,6 @@
   "dependencies": {
     "@secretguard/shared": "*",
     "@secretguard/security": "*",
-    "mongoose": "^8.0.0"
+    "mongoose": "^8.24.7"
   }
 }
